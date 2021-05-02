@@ -4,7 +4,9 @@ const User = require('../Models/User');
 const ValidateCreate = [
   check('firstName').notEmpty().withMessage(`First Name is required`),
   check('lastName').notEmpty().withMessage(`Last Name is required`),
-  check('email').isEmail().withMessage(`Please enter a valid email`),
+  check('email')
+    .isEmail()
+    .withMessage(`The input email is not valid.Please enter a valid email`),
   check('email').custom(async (value) => {
     const user = await User.findOne({ email: value });
     if (user) {
@@ -54,9 +56,10 @@ const ValidateUpdatePassword = [
 const isRequestValidated = (req, res, next) => {
   const errors = validationResult(req);
   if (errors.array().length > 0) {
-    return res
-      .status(400)
-      .json({ message: `validation error`, error: errors.array()[0].msg });
+    return res.status(400).json({
+      error: `validation error`,
+      message: errors.array()[0].msg,
+    });
   }
   next();
 };

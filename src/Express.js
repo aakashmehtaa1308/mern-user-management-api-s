@@ -22,7 +22,7 @@ app.use('/auth',authRoutes);
 
 app.use('/', (req, res, next) => {
   res.send(
-    `<h1> Hello, From the MERN Backend. How are You ? Hoping for good<h1>`
+    `<h1> Hello, From the MERN Backend. How are You ? Hoping for good.<h1>`
   );
 });
 

@@ -11,18 +11,21 @@ const signIn = async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
       return res.status(400).json({
-        error: `User doesn't exists with this e-mail. Please enter the correct e-mail.`,
+        error: `User doesn't exist.`,
+        message: `User doesn't exists with this e-mail. Please enter the correct e-mail.`,
       });
     }
     bcrypt.compare(req.body.password, user.password, (error, result) => {
       if (error) {
-        return res
-          .status(400)
-          .json({ error: `something went wrong. Please try again.` });
+        return res.status(400).json({
+          error: `Server error`,
+          message: `something went wrong. Please try again.`,
+        });
       }
       if (!result) {
         return res.status(400).json({
-          message: `Wrong Password. Please Enter the correct password.`,
+          error: `Wrong Password.`,
+          message: `The password you entered isn't correct. Please Enter the correct password.`,
         });
       }
 
@@ -44,7 +47,8 @@ const signIn = async (req, res, next) => {
     });
   } catch (error) {
     return res.status(400).json({
-      error: `Couldn't Sign-in. Something went wrong. Please try again after sometime.`,
+      error: `Something went wrong.`,
+      message: `Couldn't Sign-in. Please try again after sometime.`,
     });
   }
 };
@@ -56,7 +60,8 @@ const signOut = (req, res, next) => {
   } catch (error) {
     console.log(error);
     return res.status(400).json({
-      error: `Couldn't sign-out. Something went wrong. Please try again.`,
+      error: `Something went wrong.`,
+      message: `Couldn't sign-out. Please try again.`,
     });
   }
 };
@@ -68,9 +73,10 @@ const requiresSignIn = (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    return res
-      .status(404)
-      .json({ error: `Your session expired. Sign-in again required.` });
+    return res.status(404).json({
+      error: `Session Expired`,
+      message: `Your session expired. Sign-in again required.`,
+    });
   }
 };
 
