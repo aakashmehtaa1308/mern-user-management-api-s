@@ -42,6 +42,7 @@ const signIn = async (req, res, next) => {
           lastName: user.lastName,
           email: user.email,
           username: user.username,
+          createdAt: user.createdAt,
         },
       });
     });
@@ -67,12 +68,14 @@ const signOut = (req, res, next) => {
 };
 
 const requiresSignIn = (req, res, next) => {
+  // console.log(req);
   try {
     const token = req.headers.authorization.split(' ')[1];
     const user = jwt.verify(token, process.env.secret);
     req.user = user;
     next();
   } catch (error) {
+    console.log(error);
     return res.status(404).json({
       error: `Session Expired`,
       message: `Your session expired. Sign-in again required.`,
@@ -82,7 +85,11 @@ const requiresSignIn = (req, res, next) => {
 
 const hasAuthorization = (req, res, next) => {
   try {
-    let authorized = req.profile && req.user && req.profile._id == req.user._id;
+    // console.log(req.profile, req.user);
+    let authorized =
+      req.profile &&
+      req.user &&
+      req.profile._id.toString() == req.user._id.toString();
     if (!authorized) {
       return res
         .status(403)

@@ -23,13 +23,13 @@ const Create = (req, res, next) => {
       const createdUser = await user.save();
       createdUser.password = undefined;
       return res.status(200).json({
-        message: 'user created successfully',
+        message: 'user created successfully.',
         user: createdUser,
       });
     });
   } catch (error) {
     return res.status(400).json({
-      error: `user can not be created. Please try again later sometime`,
+      error: `user can not be created. Please try again later sometime.`,
       message: error,
     });
   }
@@ -41,12 +41,12 @@ const List = async (req, res, next) => {
       `firstName lastName email username createdAt`
     );
     if (!users) {
-      return res.status(200).json({ message: `There is no user available` });
+      return res.status(200).json({ message: `There is no user available.` });
     }
     return res.status(200).json({ users });
   } catch (error) {
     return res.status(400).json({
-      error: `Something went wrong. Please try again after sometime`,
+      error: `Something went wrong. Please try again after sometime.`,
       message: error,
     });
   }
@@ -57,20 +57,22 @@ const UserById = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.userId);
     if (!user) {
-      return res.status(400).json({ error: `User Not Found`, message: error });
+      return res
+        .status(400)
+        .json({ error: `User Not Found.`, message: `something went wrong.` });
     }
     req.profile = user;
     next();
   } catch (error) {
     return res
       .status(400)
-      .json({ error: `Could not retrieve user`, message: error });
+      .json({ error: `Could not retrieve user.`, message: error });
   }
 };
 
 const Read = (req, res, next) => {
   if (!req.profile) {
-    res.status(400).json({ error: 'User does not exist' });
+    res.status(400).json({ error: 'User does not exist.' });
   }
   req.profile.password = undefined;
   res.status(200).json({ user: req.profile });
@@ -90,7 +92,7 @@ const Update = async (req, res, next) => {
       if (newUser && newUser._id.toString() !== user._id.toString()) {
         return res.status(400).json({
           error: `Username already exists. Please enter another username.`,
-          message: error,
+          message: 'User already exists with this username.',
         });
       }
       user.username = req.body.username;
@@ -104,7 +106,7 @@ const Update = async (req, res, next) => {
   } catch (error) {
     res.status(400).json({
       error: `User can't be updated. Something went wrong. Please try again later after sometime.`,
-      message: error,
+      message: 'Something went wrong.',
     });
   }
 };
@@ -116,11 +118,11 @@ const Remove = async (req, res, next) => {
     deletedUser.password = undefined;
     res
       .status(200)
-      .json({ message: `User deleted successfully`, user: deletedUser });
+      .json({ message: `User deleted successfully.`, user: deletedUser });
   } catch (error) {
     res.status(400).json({
-      error: `User can't be deleted. Something went wrong. Please try again after sometime`,
-      message: error,
+      error: `User can't be deleted. Please try again after sometime.`,
+      message: `Something went wrong.`,
     });
   }
 };
