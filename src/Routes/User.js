@@ -7,7 +7,8 @@ const AuthCtrl = require('../Controllers/Auth');
 
 const {
   ValidateCreate,
-  ValidateUpdatePassword,
+  ValidatePassword,
+  ValidateEmail,
   isRequestValidated,
 } = require('../Validation/User');
 
@@ -37,9 +38,23 @@ router.put(
   AuthCtrl.requiresSignIn,
   UserCtrl.UserById,
   AuthCtrl.hasAuthorization,
-  ValidateUpdatePassword,
+  ValidatePassword,
   isRequestValidated,
   UserCtrl.updatePassword
+);
+
+router.put(
+  '/users/forgot-password',
+  ValidateEmail,
+  isRequestValidated,
+  UserCtrl.forgotPassword
+);
+router.put(
+  '/users/reset-password/:userId',
+  UserCtrl.UserById,
+  ValidatePassword,
+  isRequestValidated,
+  UserCtrl.resetPassword
 );
 router.delete(
   '/users/:userId',

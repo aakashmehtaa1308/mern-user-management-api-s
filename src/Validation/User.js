@@ -39,7 +39,13 @@ const ValidateCreate = [
   }),
 ];
 
-const ValidateUpdatePassword = [
+const ValidateEmail = [
+  check('email')
+    .isEmail()
+    .withMessage(`The input email is not valid.Please enter a valid email`),
+];
+
+const ValidatePassword = [
   check('password')
     .isLength({ min: 5 })
     .withMessage(`Password length must be greater than 5 characters`),
@@ -57,11 +63,16 @@ const isRequestValidated = (req, res, next) => {
   const errors = validationResult(req);
   if (errors.array().length > 0) {
     return res.status(400).json({
-      error: `validation error`,
-      message: errors.array()[0].msg,
+      message: `validation error`,
+      error: errors.array()[0].msg,
     });
   }
   next();
 };
 
-module.exports = { ValidateCreate, isRequestValidated, ValidateUpdatePassword };
+module.exports = {
+  ValidateCreate,
+  isRequestValidated,
+  ValidatePassword,
+  ValidateEmail,
+};
